@@ -35,13 +35,20 @@ Main Components:
 
 Various Other Components:
 
+* 25MHz oscillator
+    * 4 pin
+    * 3.3V
+    * Standard 7.5x5 package
+
 * ADM3222 - Analog Devices Low Power 3.3V RS-232 Line Drivers/Receivers
 
     * [Datasheet](https://www.analog.com/media/en/technical-documentation/data-sheets/ADM3202_3222_1385.pdf)
 
 * AT90SC12836RCT/C9059 Crypto Chip
+
 * Maxim MXQ3311
     * 5V/3.3V level shifters?
+
 * Ti CU257C - SN74CBT3257C - 4-bit multiplexer/demultiplexer 5V bus switch
     * ?
 
@@ -49,13 +56,17 @@ Power Regulators:
 
 * Micrel MIC49150-1.2 LDO Regulator with dual input voltages
     * [Datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/mic49150.pdf) Located between FPGA and ISP1564HL
-* MIC39102 Low Voltage Regulator
+    * 3.3V input
+    * Fixed 1.2V output
+
+* MIC39102 Adjustable Low Voltage Regulator
     * [Datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/20005834A.pdf)
-* MIC37302 Low Voltage uCap LDO Regulator (3A)
+    * Configured for 3.3V input, 2.5V output
+
+* MIC37302 Adjustable Low Voltage uCap LDO Regulator (3A)
     * [Datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/MIC37300-01-02-03-3.0A-Low-Voltage-microCap-LDO-Regulator-DS20006169A.pdf)
     * EN (pin 1) is controlled by FPGA (AB17)
-    * 5V input
-    * 3.3V output: goes to PCI Express Mini card.
+    * Configured for 5V input, 3.3V output that goes to PCI Express Mini card.
 
 Unpopulated:
 
@@ -65,9 +76,16 @@ Unpopulated:
 
 # Power
 
-All essential componets for LED blinky are connected to 3.3V. No need for 5V power rail to make that work.
+All essential components for LED blinky are connected to 3.3V. No need for 5V power rail to make that work.
 
-12V power connector of HWIC connector is not used.
+Power architecture:
+
+* HWIC 3.3V -> FPGA
+* HWIC 3.3V -> MIC39102 -> 2.5V -> FPGA, DDR SDRAM
+* HWIC 3.3V -> MIC49150-1.2 -> 1.2V -> FPGA
+* HWIC 3.3V -> ISP1564HL (-> built-in 1.8V regulator)
+* HWIC 5V -> MIC37302 -> 3.3V -> PCIe Mini Card
+* HWIC 12V not used
 
 # PC Express Mini Card Info
 
